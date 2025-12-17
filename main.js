@@ -49,10 +49,7 @@ async function submitLead(nome, telefone) {
   return response
 }
 
-document.getElementById('ddd').addEventListener('input', (e) => {
-  e.target.value = e.target.value.replace(/\D/g, '')
-})
-
+// 'ddd' now is a <select>, no input sanitization needed
 document.getElementById('numero').addEventListener('input', (e) => {
   e.target.value = e.target.value.replace(/\D/g, '')
 })
