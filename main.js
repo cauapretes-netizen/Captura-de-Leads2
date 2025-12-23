@@ -29,7 +29,7 @@ function setLoading(isLoading) {
   }
 }
 
-async function submitLead(nome, telefone) {
+async function submitLead(nome, telefone, email) {
   const response = await fetch(SUPABASE_URL, {
     method: 'POST',
     headers: {
@@ -38,7 +38,7 @@ async function submitLead(nome, telefone) {
       'Authorization': `Bearer ${SUPABASE_API_KEY}`,
       'Prefer': 'return=minimal'
     },
-    body: JSON.stringify({ nome, telefone })
+    body: JSON.stringify({ nome, telefone, email })
   })
 
   if (!response.ok) {
@@ -60,8 +60,9 @@ form.addEventListener('submit', async (e) => {
   const nome = document.getElementById('nome').value.trim()
   const ddd = document.getElementById('ddd').value.trim()
   const numero = document.getElementById('numero').value.trim()
+  const email = document.getElementById('email').value.trim()
 
-  if (!nome || !ddd || !numero) {
+  if (!nome || !ddd || !numero || !email) {
     showMessage('Por favor, preencha todos os campos', 'error')
     return
   }
@@ -76,12 +77,18 @@ form.addEventListener('submit', async (e) => {
     return
   }
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  if (!emailRegex.test(email)) {
+    showMessage('E-mail inválido', 'error')
+    return
+  }
+
   const telefone = `(${ddd}) ${numero}`
 
   setLoading(true)
 
   try {
-    await submitLead(nome, telefone)
+    await submitLead(nome, telefone, email)
     showMessage('Lead cadastrado com sucesso!', 'success')
     form.reset()
   } catch (error) {
